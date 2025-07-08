@@ -1,0 +1,196 @@
+.x-mloginWrap {
+  min-height: 100vh;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.x-mloginForm {
+  max-width: 400px;
+  width: 100%;
+  padding: 2rem;
+  background: #fff;
+}
+
+.x-mloginLogo {
+  width: 120px;
+  margin: 0 auto 1.5rem;
+  display: block;
+}
+
+.x-mloginTitle {
+  text-align: center;
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+  color: #000;
+}
+
+.x-floatingInput {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.x-floatingInput input {
+  width: 100%;
+  border: none;
+  border-bottom: 2px solid #fcd600;
+  padding: 10px 10px 10px 0;
+  font-size: 1rem;
+  background: transparent;
+  color: #000;
+  outline: none;
+}
+
+.x-floatingInput label {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  color: #aaa;
+  font-size: 1rem;
+  pointer-events: none;
+  transition: 0.3s;
+}
+
+.x-floatingInput input:focus + label,
+.x-floatingInput input:not(:placeholder-shown) + label {
+  top: -12px;
+  font-size: 0.75rem;
+  color: #000;
+}
+
+.x-password i {
+  position: absolute;
+  right: 0;
+  top: 12px;
+  cursor: pointer;
+  color: #aaa;
+}
+
+.x-mloginForgot {
+  text-align: right;
+  font-size: 0.85rem;
+  color: #000;
+  cursor: pointer;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+}
+
+.x-mloginBtn {
+  width: 100%;
+  background: #000;
+  color: #fcd600;
+  border: none;
+  padding: 0.9rem;
+  font-weight: bold;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.x-resetModalBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 15, 15, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.x-resetModal {
+  background: white;
+  padding: 2rem;
+  width: 90%;
+  max-width: 400px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.x-resetModal h3 {
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  color: #000;
+}
+
+.x-resetModal input {
+  width: 100%;
+  padding: 0.7rem;
+  font-size: 1rem;
+  border: none;
+  border-bottom: 2px solid #fcd600;
+  background: transparent;
+  outline: none;
+  margin-bottom: 1.5rem;
+  color: #000;
+}
+
+.x-resetActions {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.x-resetActions button {
+  flex: 1;
+  padding: 0.8rem;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.x-resetActions button:first-child {
+  background: #000;
+  color: #fcd600;
+}
+
+.x-resetActions button:last-child {
+  background: #eee;
+  color: #000;
+}
+
+.x-msupOr {
+  text-align: center;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.x-msupGoogle {
+  background: #fff;
+  border: 2px solid #fcd600;
+  color: #000;
+  font-weight: bold;
+  padding: 0.9rem;
+  width: 100%;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.x-mAreadyHave {
+    width: 100%;
+    text-align: center;
+    margin-top: 15px;
+}
+.x-mAreadyHave a {
+    color: #fcd600;
+    text-decoration: none; /* optional: removes underline */
+}
+
+
+
+@media (max-width: 480px) {
+  .x-mloginForm {
+    padding: 1.5rem 1rem;
+  }
+}

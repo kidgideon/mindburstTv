@@ -1,0 +1,126 @@
+.x-msupWrap {
+  background: #fff;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 1rem;
+}
+
+.x-msupForm {
+  background: #fff;
+  padding: 2rem;
+  max-width: 420px;
+  width: 100%;
+}
+
+.x-msupLogo {
+  width: 120px;
+  margin: 0 auto 1.5rem;
+  display: block;
+}
+
+.x-msupTitle {
+  text-align: center;
+  font-size: 1.6rem;
+  color: #000;
+  margin-bottom: 1.8rem;
+}
+
+.x-floatingInput {
+  position: relative;
+  margin-bottom: 1.6rem;
+}
+
+.x-floatingInput input {
+  width: 100%;
+  border: none;
+  border-bottom: 2px solid #fcd600;
+  padding: 10px 10px 10px 0;
+  font-size: 1rem;
+  color: #000;
+  background: transparent;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.x-floatingInput label {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  color: #aaa;
+  font-size: 1rem;
+  transition: 0.3s ease;
+  pointer-events: none;
+}
+
+.x-floatingInput input:focus + label,
+.x-floatingInput input:not(:placeholder-shown) + label {
+  top: -12px;
+  font-size: 0.75rem;
+  color: #000;
+}
+
+
+.x-password {
+  position: relative;
+}
+
+.x-password i {
+  position: absolute;
+  right: 0;
+  top: 12px;
+  cursor: pointer;
+  color: #aaa;
+  font-size: 1rem;
+}
+
+.x-msupBtn {
+  width: 100%;
+  background: #000;
+  color: #fcd600;
+  border: none;
+  padding: 0.9rem;
+  font-weight: bold;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+
+.x-msupOr {
+  text-align: center;
+  margin: 1.5rem 0 1rem;
+  color: #888;
+  font-weight: 500;
+}
+
+.x-msupGoogle {
+  width: 100%;
+  padding: 0.9rem;
+  background: #fff;
+  color: #000;
+  border: 2px solid #000;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.x-msupGoogle i {
+  color: #fcd600;
+}
+
+.x-msupGoogle:hover {
+  background: #f5f5f5;
+}
+
+@media (max-width: 480px) {
+  .x-msupForm {
+    padding: 1.5rem 1rem;
+  }
+}
