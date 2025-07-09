@@ -5,12 +5,14 @@ import Login from "../admin/adminLogin";
 import Signup from "../admin/adminSignup";
 import Dashboard from "../admin/adminDashboard";
 import CreateArticle from "../admin/adminCreateArticle";
+import Home from "../pages/home";
 
 function App() {
   return (
     <>
       <Routes>
         <Route path="/admin-home" element={<AdminHome />} />
+        <Route path="/" element={<Home />} />
         <Route path="/admin-signup" element={<Signup />} />
         <Route path="/admin-login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
