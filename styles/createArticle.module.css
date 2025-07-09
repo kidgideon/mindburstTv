@@ -1,0 +1,203 @@
+/* Wrapper for the entire form area */
+.formWrap {
+  max-width: 720px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Input, select, textarea styles */
+.input,
+.select {
+  width: 100%;
+  padding: 10px 0px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+}
+
+.textarea {
+  min-height: 50px;
+  resize: vertical;
+  width: 100%;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+}
+
+.select {
+  background-color: #f9f9f9;
+}
+
+/* Upload label for cover and media */
+.uploadLabel {
+  display: inline-block;
+  font-weight: 600;
+  cursor: pointer;
+  color: #444;
+  background: #f2f2f2;
+  padding: 10px 14px;
+  border-radius: 6px;
+  margin-top: 8px;
+  transition: background 0.2s;
+}
+
+.uploadLabel:hover {
+  background: #e2e2e2;
+}
+
+/* File inputs hidden */
+.fileInput {
+  display: none;
+}
+
+/* Preview for image or video */
+.previewBox {
+  margin-top: 10px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.previewBox img,
+.previewBox video {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* Section list and section box */
+.sectionList {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+  width: 100%;
+}
+
+.sectionBox {
+  background: #f7f7f7;
+  padding: 1rem;
+  border-radius: 10px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 95%;
+}
+
+.sectionBox textarea {
+  min-height: 200px;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sectionTag {
+  font-weight: bold;
+  font-size: 0.9rem;
+  padding: 4px 10px;
+  background: #ddd;
+  border-radius: 6px;
+  color: #333;
+}
+
+.removeBtn {
+  background: #ff4d4f;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  font-size: 16px;
+  cursor: pointer;
+  line-height: 28px;
+  text-align: center;
+  transition: background 0.2s;
+}
+
+.removeBtn:hover {
+  background: #d9363e;
+}
+
+/* Media Upload button */
+.mediaUpload {
+  text-align: left;
+  margin-top: 8px;
+}
+
+.uploadIcon {
+  font-size: 22px;
+  color: #555;
+  cursor: pointer;
+  padding: 10px;
+  border: 2px dashed #aaa;
+  border-radius: 8px;
+  display: inline-block;
+  transition: all 0.2s;
+}
+
+.uploadIcon:hover {
+  color: #000;
+  border-color: #555;
+}
+
+/* Add Section & Action Buttons */
+.addSectionBtns,
+.actionBtns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 1rem;
+}
+
+.addSectionBtns button,
+.actionBtns button {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  background-color: #222;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-weight: 500;
+}
+
+.addSectionBtns button:hover,
+.actionBtns button:hover {
+  background-color: #000;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .formWrap {
+    width: 90%;
+  }
+
+  .previewBox img,
+  .previewBox video {
+    max-height: 260px;
+  }
+
+  .uploadLabel {
+    font-size: 0.9rem;
+  }
+
+  .sectionTag {
+    font-size: 0.8rem;
+  }
+
+  .uploadIcon {
+    font-size: 20px;
+    padding: 8px;
+  }
+}

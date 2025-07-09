@@ -35,6 +35,7 @@ const Signup = () => {
 
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -52,7 +53,7 @@ const Signup = () => {
       return toast.error("Passwords do not match");
     }
 
-    const toastId = toast.loading("Creating admin account...");
+    const toastId = toast.loading("Creating  account...");
     setLoading(true);
 
     try {
@@ -89,7 +90,7 @@ const Signup = () => {
         firstName,
         lastName,
         dp: defaultDp,
-        role: "admin",
+        role: "journalist",
         createdAt: Date.now()
       });
 
@@ -103,6 +104,9 @@ const Signup = () => {
         username: ""
       });
 
+       setTimeout(() => {
+           navigate("/dashboard")
+       }, 1000)
     } catch (err) {
       console.error(err);
       toast.error("Signup failed. Try again.");
@@ -137,13 +141,15 @@ const Signup = () => {
         firstName: user.displayName?.split(" ")[0] || "",
         lastName: user.displayName?.split(" ")[1] || "",
         dp: user.photoURL || defaultDp,
-        role: "admin",
+        role: "journalist",
         createdAt: Date.now()
       };
 
       await setDoc(doc(db, "users", user.uid), newUser);
       toast.success("Signed up with Google");
-
+      setTimeout(() => {
+             navigate("/dashboard")
+      }, 1000)
     } catch (err) {
       console.error(err);
       toast.error("Google signup failed");

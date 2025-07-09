@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { signInWithEmailAndPassword, sendPasswordResetEmail, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { auth } from "../config/config";
+import {collection,doc,getDocs,query,setDoc,where
+} from "firebase/firestore";
+import { auth , db} from "../config/config";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
@@ -17,6 +19,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [resetEmail, setResetEmail] = useState("");
   const [showResetModal, setShowResetModal] = useState(false);
+  const navigate = useNavigate();
 
   const handleGoogleLogin = async () => {
   const provider = new GoogleAuthProvider();
@@ -47,6 +50,7 @@ const Login = () => {
 
       await setDoc(doc(db, "users", user.uid), newUser);
       toast.success("Account created & logged in");
+      setTimeout(() => {navigate("/dashboard")}, 1000)
     } else {
       toast.success("Login successful");
     }
@@ -56,6 +60,7 @@ const Login = () => {
   } finally {
     toast.dismiss(toastId);
     setLoading(false);
+     setTimeout(() => {navigate("/dashboard")}, 1000)
   }
 };
 
@@ -76,6 +81,7 @@ const Login = () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       toast.success("Login successful");
+       setTimeout(() => {navigate("/dashboard")}, 1000)
     } catch (err) {
       console.error(err);
       toast.error("Invalid email or password");
