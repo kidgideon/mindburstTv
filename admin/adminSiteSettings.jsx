@@ -5,6 +5,7 @@ import { db } from "../config/config";
 import { toast } from "sonner";
 import Navbar from "../components/navbar";
 import styles from "../styles/settings.module.css";
+import Footer from "../components/footer";
 
 const SiteSettings = () => {
 const [settings, setSettings] = useState({
@@ -149,6 +150,7 @@ return (
         </button>
       </div>
     </div>
+    <Footer/>
   </div>
 </div>
 );

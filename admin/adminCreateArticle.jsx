@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Footer from "../components/footer";
 import {
   getDownloadURL,
   ref,
@@ -373,6 +374,7 @@ const CreateArticle = () => {
             </button>
           </div>
         </div>
+         <Footer/>
       </div>
     </div>
   );

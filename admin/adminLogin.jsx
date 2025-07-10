@@ -44,7 +44,7 @@ const Login = () => {
         firstName: user.displayName?.split(" ")[0] || "",
         lastName: user.displayName?.split(" ")[1] || "",
         dp: user.photoURL || defaultDp,
-        role: "admin",
+        role: "journalist",
         createdAt: Date.now()
       };
 

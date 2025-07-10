@@ -8,6 +8,7 @@ import LazyLoad from "react-lazyload";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import Footer from "../components/footer";
 
 
 const defaultDp =
@@ -75,12 +76,13 @@ const ManageUsers = () => {
       Copy Link
     </button>
   </div>
+ 
 </div>
 
         <div className={styles.grid}>
           {users.map(u => (
             <LazyLoad key={u.uid} height={200} offset={100} once placeholder={<div className={styles.placeholder} />}>
-              <div className={styles.card} onClick={() => nav(`/journalist/${u.username}`)}>
+              <div className={styles.card}>
                 <img src={u.profileImage || defaultDp} alt={u.username}/>
                 <h4>{u.firstName} {u.lastName}</h4>
                 <p>Articles: {Array.isArray(u.articles) ? u.articles.length : 0}</p>
@@ -88,6 +90,8 @@ const ManageUsers = () => {
               </div>
             </LazyLoad>
           ))}
+
+           <Footer/>
         </div>
       </div>
 
