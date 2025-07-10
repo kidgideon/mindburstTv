@@ -1,0 +1,114 @@
+.grid {
+ width: 100%;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ flex-direction: row;
+ flex-wrap: wrap;
+}
+
+.title {
+    font-size: 20px;
+    width: 95%;
+    text-align: center;
+    color:#555;
+}
+
+.card {
+  background:#fff;
+  box-shadow:0 2px 6px rgba(0,0,0,0.1);
+  border-radius:8px;
+  padding:1rem;
+  text-align:center;
+  cursor:pointer;
+  position: relative;
+  height: 180px;
+  width: 150px;
+}
+.card img {
+  width:80px; height:80px;
+  border-radius:50%;
+  object-fit:cover;
+  margin-bottom:0.5rem;
+}
+.card h4 { margin:0.5rem 0 0.25rem; }
+.card p { margin:10px; font-size:0.9rem; color:#555; }
+
+.card button {
+  position:absolute; bottom:0.75rem; right:0.75rem;
+  margin-top: 30px;
+  padding:6px 12px;
+  background:#fcd600; border:none;
+  border-radius:4px;
+  cursor:pointer;
+  transition:background .2s;
+}
+.card button:hover { background:#e5b500; }
+.backdrop {
+  position:fixed; top:0; left:0; right:0; bottom:0;
+  background:rgba(0,0,0,0.5);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.modal {
+  background:#fff;
+  padding:1.5rem;
+  border-radius:8px;
+  max-width:320px;
+  width:90%;
+  box-shadow:0 4px 12px rgba(0,0,0,0.2);
+}
+.modal h3 { margin-top:0; }
+.modal button {
+  margin:0.5rem 0;
+  width:100%;
+  padding:10px;
+  border:none;
+  border-radius:4px;
+  cursor:pointer;
+}
+.modal button:nth-child(2) { background:#f00; color:#fff; }
+.modal button:nth-child(3) { background:#0a0; color:#fff; }
+.modal button:last-child { background:#aaa; color:#fff; }
+
+.inviteBox {
+  margin: 1.5rem 0;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.inviteBox p {
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.inviteAction {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.inviteAction input {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.inviteAction button {
+  background: #222;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.inviteAction button:hover {
+  background: #000;
+}
+

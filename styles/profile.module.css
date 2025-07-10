@@ -1,0 +1,250 @@
+/* === Layout Wrappers === */
+.profileWrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+}
+
+.profileTop {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 95%;
+  max-width: 450px;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+
+}
+
+.imageArea {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+
+/* === Image Styling === */
+.imageBox {
+  position: relative;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.imageBox img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.dpLabel {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 6px;
+  cursor: pointer;
+}
+
+/* === Profile Info === */
+.infoSection {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.infoSection h2 {
+  font-size: 1.5rem;
+  margin: 5px;
+}
+
+.bio,
+.location {
+  color: #555;
+ margin: 10px;
+}
+
+.actionBtns {
+  margin-top: 1rem;
+}
+
+.actionBtns button {
+  margin-right: 0.75rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  background: #fcd600;
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.3s;
+}
+
+.actionBtns button:hover {
+  background: #e5bf00;
+}
+
+/* === Articles === */
+.articlesWrap {
+ width: 95%;
+ display: flex;
+ align-items: center;
+ flex-direction: column;
+}
+
+.articlesWrap h3 {
+  width: 100%;
+  text-align: start;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+.articleCard {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.articleCard img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+}
+
+.articleInfo {
+  padding: 0.75rem;
+}
+
+.articleInfo h4 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.articleInfo p {
+  font-size: 0.9rem;
+  color: #555;
+  margin: 0.5rem 0;
+}
+
+/* === Empty State === */
+.emptyPortfolio {
+ width: 100%;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ flex-direction: column;
+color: #555;
+}
+
+.emptyPortfolio i {
+    font-size: 150px;
+}
+
+/* === Modal Styling === */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modalCard {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.modalCard h3 {
+  margin-bottom: 1.5rem;
+  font-size: 1.25rem;
+}
+
+.modalCard input,
+.modalCard textarea {
+  width: 95%;
+  padding: 0.65rem;
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.modalDp {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 1rem;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.modalActions button {
+  flex: 1;
+  padding: 0.6rem;
+  background: #fcd600;
+  border: none;
+  border-radius: 5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.modalActions button:hover {
+  background: #e5bf00;
+}
+
+/* === Responsive Fixes === */
+@media (max-width: 600px) {
+
+  .profileTop {
+    max-width: 300px;
+  }
+  .imageBox {
+    width: 100px;
+    height: 100px;
+  }
+
+  .infoSection {
+    width: 100%;
+  }
+
+  .articleInfo h4 {
+    font-size: 0.95rem;
+  }
+
+  .modalCard {
+    padding: 1.5rem 1rem;
+  }
+}

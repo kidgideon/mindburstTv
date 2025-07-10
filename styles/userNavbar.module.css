@@ -1,0 +1,201 @@
+.Navbar {
+    width: 100%;
+    background-color: #141414;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column; 
+    padding-bottom: 10px;
+    z-index: 50;
+}
+
+.Navbar img {
+    width: 50px;
+    border-radius: 50px;
+    margin-left: 20px;
+}
+
+.topArea {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+    color: white;
+}
+
+.imageArea {
+     width: 100%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.imageArea p {
+    font-weight: bold;
+}
+
+.mobileArea {
+    width: 100%;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.mobileArea i {
+    font-size: 30px;
+    cursor: pointer;
+}
+
+.youtubeArea i {
+    color: red;
+    margin-right: 10px;
+}
+
+.mobileHarmburger {
+    color: #fcd600;
+    margin-right: 20px;
+}
+
+.searchArea {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    position: relative;
+}
+
+.searchArea input {
+    width: 100%;
+    max-width: 450px;
+    padding: 15px 20px;
+    border-radius: 5px;
+    outline: none;
+    border: none;
+    padding-left: 40px;
+    background-color: rgb(39, 39, 39);
+    color: #585858;
+}
+
+.searchArea i {
+    position: absolute;
+    left: 32%;
+    color: #fcd600;
+}
+
+.categories {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    gap: 2%;
+    margin-top: 20px;
+    height: 100%;
+    min-height: 150px;
+}
+
+.catogryListing {
+    width: 50%;
+    height: 100%;
+    min-height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: #555555;
+    gap: 25px;
+}
+
+.slideArea {
+    width: 100%;
+    height: 200px;
+}
+
+.catogryListing p {
+  cursor: pointer;
+  margin: 4px 0;
+  position: relative;
+  transition: color 0.3s;
+}
+
+.catogryListing p:hover {
+  color: #fcd600;
+}
+
+.catogryListing p::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background-color: #fcd600;
+  transition: width 0.3s;
+}
+
+.catogryListing p:hover::after {
+  width: 100%;
+}
+
+/* Hide hamburger on desktop */
+@media (min-width: 768px) {
+  .mobileHarmburger {
+    display: none;
+  }
+  .slideArea {
+    display: none;
+  }
+}
+
+/* Show categories always on desktop */
+.desktopOnly {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .desktopOnly {
+    display: flex;
+  }
+}
+
+
+@media (max-width: 600px) {
+    .searchArea input {
+        width: 250px;
+    }
+
+    .searchArea {
+        margin-top: 12px;
+    }
+
+    .youtubeArea i {
+        margin-right: 5px;
+    }
+
+    .searchArea i {
+        left: 12%;
+    }
+
+    .catogryListing {
+        font-size: 16px;
+        width: 30%;
+    }
+
+    .mobileArea i{
+        font-size: 20px;
+    }
+
+    .imageArea p {
+        font-size: 12px;
+    }
+
+    .imageArea img {
+        margin-left: 5px;
+    }
+}

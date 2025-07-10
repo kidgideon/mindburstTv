@@ -44,13 +44,11 @@ const Navbar = () => {
   ];
 
   const adminOnlyLinks = [
-     { to: "/subscribers", label: "Subscribers", icon: "fas fa-envelope" },
       { to: "/manage-journalists", label: "Journalists", icon: "fas fa-users-cog" },
     { to: "/site-setting", label: "Site Setting", icon: "fas fa-tools" },
   ];
 
   const navLinks = userRole === "admin" ? [...baseLinks, ...adminOnlyLinks] : baseLinks;
-
   return (
     <>
       {/* Top horizontal navbar */}

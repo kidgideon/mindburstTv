@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc , doc, updateDoc, arrayUnion } from "firebase/firestore";
 import { auth, db, storage } from "../config/config";
 import { toast } from "sonner";
 import Navbar from "../components/navbar";
@@ -9,6 +9,9 @@ import styles from "../styles/createArticle.module.css";
 const categories = [
   "Politics", "Sports", "Entertainment", "Business", "Tech", "World", "Health",
 ];
+
+const MAX_IMAGE_SIZE = 2 * 1024 * 1024; // 2MB
+const MAX_VIDEO_SIZE = 30 * 1024 * 1024; // 30MB
 
 const CreateArticle = () => {
   const [title, setTitle] = useState("");
@@ -19,11 +22,16 @@ const CreateArticle = () => {
   const [sections, setSections] = useState([]);
   const [uploading, setUploading] = useState(false);
 
+  const allowedImages = ["image/jpeg", "image/png", "image/jpg", "image/webp"];
+  const allowedVideos = ["video/mp4", "video/webm", "video/quicktime"];
+
   const handleAddSection = (type) => {
-    setSections((prev) => [...prev, { type, file: null, content: "", preview: null }]);
+    if (uploading) return;
+    setSections(prev => [...prev, { type, file: null, content: "", preview: null }]);
   };
 
   const handleRemoveSection = (index) => {
+    if (uploading) return;
     const updated = [...sections];
     updated.splice(index, 1);
     setSections(updated);
@@ -36,14 +44,21 @@ const CreateArticle = () => {
   };
 
   const handleSectionFile = (file, type, index) => {
-    const allowedImage = ["image/jpeg", "image/png", "image/jpg", "image/webp", "image/avif"];
-    const allowedVideo = ["video/mp4", "video/webm", "video/quicktime"];
+    const isImage = allowedImages.includes(file.type);
+    const isVideo = allowedVideos.includes(file.type);
+    const sizeOK =
+      (isImage && file.size <= MAX_IMAGE_SIZE) ||
+      (isVideo && file.size <= MAX_VIDEO_SIZE);
 
-    const isValid =
-      (type === "image" && allowedImage.includes(file.type)) ||
-      (type === "video" && allowedVideo.includes(file.type));
+    if ((type === "image" && !isImage) || (type === "video" && !isVideo)) {
+      return toast.error("Unsupported file type");
+    }
 
-    if (!isValid) return toast.error("Unsupported file format");
+    if (!sizeOK) {
+      return toast.error(
+        type === "image" ? "Image must be ≤ 2MB" : "Video must be ≤ 30MB"
+      );
+    }
 
     const updated = [...sections];
     updated[index].file = file;
@@ -52,86 +67,77 @@ const CreateArticle = () => {
   };
 
   const handleCoverSelect = (file) => {
-    const allowed = ["image/jpeg", "image/png", "image/jpg", "image/webp", "image/avif"];
-    if (!allowed.includes(file.type)) {
-      return toast.error("Invalid cover image type");
+    if (!allowedImages.includes(file.type)) {
+      return toast.error("Invalid cover image format");
+    }
+    if (file.size > MAX_IMAGE_SIZE) {
+      return toast.error("Cover image must be ≤ 2MB");
     }
 
     setCoverFile(file);
     setCoverPreview(URL.createObjectURL(file));
   };
+
 const handleSubmit = async () => {
-  console.log("🔄 Submission started");
-
   if (!title || !summary || !category || !coverFile || sections.length === 0) {
-    toast.error("Please fill all required fields");
-    console.warn("🚫 Missing required fields", {
-      title,
-      summary,
-      category,
-      coverFile,
-      sectionsLength: sections.length,
-    });
+    toast.error("Fill all required fields");
     return;
   }
 
-  if (!auth.currentUser?.uid) {
-    toast.error("User not authenticated");
-    console.warn("🚫 No user UID found");
+  const user = auth.currentUser;
+  if (!user?.uid) {
+    toast.error("You must be logged in");
     return;
   }
 
-  const toastId = toast.loading("Publishing article...");
+  const toastId = toast.loading("Publishing...");
   setUploading(true);
 
   try {
-    console.log("📤 Uploading cover image...");
+    // Upload cover image
     const coverRef = ref(storage, `covers/${Date.now()}_${coverFile.name}`);
     const coverSnap = await uploadBytes(coverRef, coverFile);
     const coverURL = await getDownloadURL(coverSnap.ref);
-    console.log("✅ Cover uploaded:", coverURL);
 
-    console.log("📤 Processing sections...");
+    // Process sections
     const formattedSections = await Promise.all(
-      sections.map(async (s, i) => {
-        console.log(`⏳ Section ${i + 1}`, s);
-
+      sections.map(async (s, idx) => {
         if (s.type === "text") {
-          if (!s.content || s.content.trim() === "") {
-            throw new Error(`Text section ${i + 1} is empty`);
-          }
-          return { type: "text", content: s.content };
+          if (!s.content.trim()) throw new Error(`Empty text section at ${idx + 1}`);
+          return { type: "text", content: s.content.trim() };
         }
 
-        if (!s.file) {
-          throw new Error(`Missing file in section ${i + 1}`);
-        }
-
+        if (!s.file) throw new Error(`Missing file for section ${idx + 1}`);
         const fileRef = ref(storage, `articles/${Date.now()}_${s.file.name}`);
-        const snap = await uploadBytes(fileRef, s.file);
-        const fileURL = await getDownloadURL(snap.ref);
-
-        console.log(`✅ Section ${i + 1} uploaded`, { url: fileURL });
+        const fileSnap = await uploadBytes(fileRef, s.file);
+        const fileURL = await getDownloadURL(fileSnap.ref);
         return { type: s.type, content: fileURL };
       })
     );
 
-    console.log("📝 Saving article to Firestore...");
-    await addDoc(collection(db, "articles"), {
+    // Save article to Firestore and get its ID
+    const articleRef = await addDoc(collection(db, "articles"), {
       title,
       summary,
       category,
       coverImage: coverURL,
       sections: formattedSections,
       createdAt: Date.now(),
-      createdBy: auth.currentUser.uid,
+      createdBy: user.uid,
       published: true,
     });
 
-    toast.success("Article published!");
-    console.log("✅ Article published successfully");
+    const articleId = articleRef.id;
 
-    // Reset state
+    // Update user doc with this article ID
+    const userDocRef = doc(db, "users", user.uid);
+    await updateDoc(userDocRef, {
+      articles: arrayUnion(articleId),
+    });
+
+    toast.success("Article published!");
+
+    // Reset form
     setTitle("");
     setSummary("");
     setCategory("");
@@ -186,7 +192,8 @@ const handleSubmit = async () => {
 
           <div className={styles.coverUpload}>
             <label htmlFor="coverInput" className={styles.uploadLabel}>
-              <i className="fas fa-camera"></i> {coverPreview ? "Change Cover" : "Upload Cover"}
+              <i className="fas fa-camera"></i>{" "}
+              {coverPreview ? "Change Cover" : "Upload Cover Image"}
             </label>
             <input
               id="coverInput"
@@ -222,7 +229,7 @@ const handleSubmit = async () => {
                     className={styles.textarea}
                     value={sec.content}
                     onChange={(e) => handleSectionTextChange(idx, e.target.value)}
-                    placeholder="Write content..."
+                    placeholder="Write something..."
                     disabled={uploading}
                   />
                 ) : (
@@ -233,14 +240,15 @@ const handleSubmit = async () => {
                           sec.type === "image" ? "fa-image" : "fa-video"
                         } ${styles.uploadIcon}`}
                         onClick={() =>
+                          !uploading &&
                           document.getElementById(`file-${sec.type}-${idx}`)?.click()
                         }
                       ></i>
                       <input
                         id={`file-${sec.type}-${idx}`}
                         type="file"
-                        hidden
                         accept={sec.type === "image" ? "image/*" : "video/*"}
+                        hidden
                         disabled={uploading}
                         onChange={(e) =>
                           handleSectionFile(e.target.files[0], sec.type, idx)
