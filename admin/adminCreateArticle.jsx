@@ -1,22 +1,32 @@
-import { useState } from "react";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { collection, addDoc , doc, updateDoc, arrayUnion } from "firebase/firestore";
+import { useEffect, useState } from "react";
+import {
+  getDownloadURL,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
+import {
+  collection,
+  addDoc,
+  doc,
+  updateDoc,
+  arrayUnion,
+  getDoc,
+} from "firebase/firestore";
 import { auth, db, storage } from "../config/config";
 import { toast } from "sonner";
+import { onAuthStateChanged } from "firebase/auth";
 import Navbar from "../components/navbar";
 import styles from "../styles/createArticle.module.css";
-
-const categories = [
-  "Politics", "Sports", "Entertainment", "Business", "Tech", "World", "Health",
-];
 
 const MAX_IMAGE_SIZE = 2 * 1024 * 1024; // 2MB
 const MAX_VIDEO_SIZE = 30 * 1024 * 1024; // 30MB
 
 const CreateArticle = () => {
+  const [user, setUser] = useState(null);
   const [title, setTitle] = useState("");
   const [summary, setSummary] = useState("");
   const [category, setCategory] = useState("");
+  const [categories, setCategories] = useState([]);
   const [coverFile, setCoverFile] = useState(null);
   const [coverPreview, setCoverPreview] = useState(null);
   const [sections, setSections] = useState([]);
@@ -25,9 +35,57 @@ const CreateArticle = () => {
   const allowedImages = ["image/jpeg", "image/png", "image/jpg", "image/webp"];
   const allowedVideos = ["video/mp4", "video/webm", "video/quicktime"];
 
+  // Auth state
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (u) => {
+      if (u) setUser(u);
+      else setUser(null);
+    });
+    return () => unsub();
+  }, []);
+
+  // Unload protection
+  useEffect(() => {
+    const warn = (e) => {
+      if (uploading) {
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    };
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, [uploading]);
+
+  // Load categories from site settings
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const docSnap = await getDoc(doc(db, "siteInfo", "settings"));
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          if (Array.isArray(data.categories)) {
+            setCategories(data.categories);
+          } else {
+            toast.error("Invalid categories format in Firestore");
+          }
+        } else {
+          toast.error("Site settings not found");
+        }
+      } catch (err) {
+        console.error("Failed to fetch categories:", err);
+        toast.error("Error loading categories");
+      }
+    };
+
+    loadCategories();
+  }, []);
+
   const handleAddSection = (type) => {
     if (uploading) return;
-    setSections(prev => [...prev, { type, file: null, content: "", preview: null }]);
+    setSections((prev) => [
+      ...prev,
+      { type, file: null, content: "", preview: null },
+    ]);
   };
 
   const handleRemoveSection = (index) => {
@@ -44,6 +102,8 @@ const CreateArticle = () => {
   };
 
   const handleSectionFile = (file, type, index) => {
+    if (!file) return;
+
     const isImage = allowedImages.includes(file.type);
     const isVideo = allowedVideos.includes(file.type);
     const sizeOK =
@@ -67,6 +127,8 @@ const CreateArticle = () => {
   };
 
   const handleCoverSelect = (file) => {
+    if (!file) return;
+
     if (!allowedImages.includes(file.type)) {
       return toast.error("Invalid cover image format");
     }
@@ -78,81 +140,98 @@ const CreateArticle = () => {
     setCoverPreview(URL.createObjectURL(file));
   };
 
-const handleSubmit = async () => {
-  if (!title || !summary || !category || !coverFile || sections.length === 0) {
-    toast.error("Fill all required fields");
-    return;
-  }
+  const uploadFileWithToast = (fileRef, file, label) => {
+    return new Promise((resolve, reject) => {
+      const uploadTask = uploadBytesResumable(fileRef, file);
+      const toastId = toast.loading(`${label}: Uploading... 0%`);
 
-  const user = auth.currentUser;
-  if (!user?.uid) {
-    toast.error("You must be logged in");
-    return;
-  }
-
-  const toastId = toast.loading("Publishing...");
-  setUploading(true);
-
-  try {
-    // Upload cover image
-    const coverRef = ref(storage, `covers/${Date.now()}_${coverFile.name}`);
-    const coverSnap = await uploadBytes(coverRef, coverFile);
-    const coverURL = await getDownloadURL(coverSnap.ref);
-
-    // Process sections
-    const formattedSections = await Promise.all(
-      sections.map(async (s, idx) => {
-        if (s.type === "text") {
-          if (!s.content.trim()) throw new Error(`Empty text section at ${idx + 1}`);
-          return { type: "text", content: s.content.trim() };
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress = Math.round(
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          );
+          toast.loading(`${label}: Uploading... ${progress}%`, {
+            id: toastId,
+          });
+        },
+        (error) => {
+          toast.error(`${label} upload failed`, { id: toastId });
+          reject(error);
+        },
+        async () => {
+          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+          toast.success(`${label} uploaded ✅`, { id: toastId });
+          resolve(downloadURL);
         }
-
-        if (!s.file) throw new Error(`Missing file for section ${idx + 1}`);
-        const fileRef = ref(storage, `articles/${Date.now()}_${s.file.name}`);
-        const fileSnap = await uploadBytes(fileRef, s.file);
-        const fileURL = await getDownloadURL(fileSnap.ref);
-        return { type: s.type, content: fileURL };
-      })
-    );
-
-    // Save article to Firestore and get its ID
-    const articleRef = await addDoc(collection(db, "articles"), {
-      title,
-      summary,
-      category,
-      coverImage: coverURL,
-      sections: formattedSections,
-      createdAt: Date.now(),
-      createdBy: user.uid,
-      published: true,
+      );
     });
+  };
 
-    const articleId = articleRef.id;
+  const handleSubmit = async () => {
+    if (!title || !summary || !category || !coverFile || sections.length === 0) {
+      return toast.error("Fill all required fields");
+    }
 
-    // Update user doc with this article ID
-    const userDocRef = doc(db, "users", user.uid);
-    await updateDoc(userDocRef, {
-      articles: arrayUnion(articleId),
-    });
+    if (!user?.uid) {
+      return toast.error("You must be logged in");
+    }
 
-    toast.success("Article published!");
+    setUploading(true);
+    const topLevelToast = toast.loading("Publishing article...");
 
-    // Reset form
-    setTitle("");
-    setSummary("");
-    setCategory("");
-    setCoverFile(null);
-    setCoverPreview(null);
-    setSections([]);
-  } catch (err) {
-    console.error("❌ Publish failed:", err);
-    toast.error("Failed to publish article");
-  } finally {
-    toast.dismiss(toastId);
-    setUploading(false);
-  }
-};
+    try {
+      const coverRef = ref(storage, `covers/${Date.now()}_${coverFile.name}`);
+      const coverURL = await uploadFileWithToast(coverRef, coverFile, "Cover");
 
+      const formattedSections = await Promise.all(
+        sections.map(async (s, idx) => {
+          if (s.type === "text") {
+            if (!s.content.trim()) throw new Error(`Empty text section at ${idx + 1}`);
+            return { type: "text", content: s.content.trim() };
+          }
+
+          if (!s.file) throw new Error(`Missing file for section ${idx + 1}`);
+          const fileRef = ref(storage, `articles/${Date.now()}_${s.file.name}`);
+          const fileURL = await uploadFileWithToast(
+            fileRef,
+            s.file,
+            `Section ${idx + 1}`
+          );
+          return { type: s.type, content: fileURL };
+        })
+      );
+
+      const articleRef = await addDoc(collection(db, "articles"), {
+        title,
+        summary,
+        category,
+        coverImage: coverURL,
+        sections: formattedSections,
+        createdAt: Date.now(),
+        createdBy: user.uid,
+        published: true,
+      });
+
+      await updateDoc(doc(db, "users", user.uid), {
+        articles: arrayUnion(articleRef.id),
+      });
+
+      toast.success("Article published 🎉", { id: topLevelToast });
+
+      setTitle("");
+      setSummary("");
+      setCategory("");
+      setCoverFile(null);
+      setCoverPreview(null);
+      setSections([]);
+    } catch (err) {
+      console.error("❌ Publish failed:", err);
+      toast.error(err?.message || "Failed to publish article", { id: topLevelToast });
+    } finally {
+      setUploading(false);
+    }
+  };
 
   return (
     <div className="container">
@@ -186,7 +265,9 @@ const handleSubmit = async () => {
           >
             <option value="">Select Category</option>
             {categories.map((cat) => (
-              <option key={cat}>{cat}</option>
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
             ))}
           </select>
 
@@ -201,7 +282,10 @@ const handleSubmit = async () => {
               accept="image/*"
               hidden
               disabled={uploading}
-              onChange={(e) => handleCoverSelect(e.target.files[0])}
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) handleCoverSelect(file);
+              }}
             />
             {coverPreview && (
               <div className={styles.previewBox}>
@@ -250,9 +334,10 @@ const handleSubmit = async () => {
                         accept={sec.type === "image" ? "image/*" : "video/*"}
                         hidden
                         disabled={uploading}
-                        onChange={(e) =>
-                          handleSectionFile(e.target.files[0], sec.type, idx)
-                        }
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) handleSectionFile(file, sec.type, idx);
+                        }}
                       />
                     </div>
                     {sec.preview && (
@@ -271,9 +356,15 @@ const handleSubmit = async () => {
           </div>
 
           <div className={styles.addSectionBtns}>
-            <button onClick={() => handleAddSection("text")} disabled={uploading}>+ Text</button>
-            <button onClick={() => handleAddSection("image")} disabled={uploading}>+ Image</button>
-            <button onClick={() => handleAddSection("video")} disabled={uploading}>+ Video</button>
+            <button onClick={() => handleAddSection("text")} disabled={uploading}>
+              + Text
+            </button>
+            <button onClick={() => handleAddSection("image")} disabled={uploading}>
+              + Image
+            </button>
+            <button onClick={() => handleAddSection("video")} disabled={uploading}>
+              + Video
+            </button>
           </div>
 
           <div className={styles.actionBtns}>

@@ -1,27 +1,45 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, doc, getDoc } from "firebase/firestore";
 import { db } from "../config/config";
 import Styles from "../styles/userNavbar.module.css";
 import Logo from "../images/logo.png";
 import { motion, AnimatePresence } from "framer-motion";
 
-const categories = [
-  ["Health", "Tech", "Banking"],
-  ["Education", "Kids", "Politics"],
-  ["Insurance", "Sports", "World"],
-  ["TNT", "Article", "Story"]
-];
+const groupCategories = (list, groupSize = 3) => {
+  const groups = [];
+  for (let i = 0; i < list.length; i += groupSize) {
+    groups.push(list.slice(i, i + groupSize));
+  }
+  return groups;
+};
 
 const UserNavbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [allArticles, setAllArticles] = useState([]);
+  const [categories, setCategories] = useState([]);
   const nav = useNavigate();
   const inputRef = useRef();
 
-  // Load all articles
+  // Fetch categories from Firestore
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const snap = await getDoc(doc(db, "siteInfo", "settings"));
+        const data = snap.exists() ? snap.data() : {};
+        if (Array.isArray(data.categories)) {
+          setCategories(groupCategories(data.categories));
+        }
+      } catch (err) {
+        console.error("Failed to load categories:", err);
+      }
+    };
+    loadCategories();
+  }, []);
+
+  // Load all articles for search suggestions
   useEffect(() => {
     const fetch = async () => {
       const snap = await getDocs(collection(db, "articles"));
@@ -36,7 +54,7 @@ const UserNavbar = () => {
     fetch();
   }, []);
 
-  // Fuzzy match suggestions
+  // Fuzzy search filter
   useEffect(() => {
     const term = searchTerm.trim().toLowerCase();
     if (!term) return setSuggestions([]);
@@ -47,7 +65,7 @@ const UserNavbar = () => {
     setSuggestions(matches.length ? matches.slice(0, 7) : [{ id: null, title: "No results found" }]);
   }, [searchTerm, allArticles]);
 
-  // Close dropdown on outside click
+  // Outside click closes suggestion
   useEffect(() => {
     const onClick = (e) => {
       if (!inputRef.current?.contains(e.target)) {
@@ -83,9 +101,16 @@ const UserNavbar = () => {
         </div>
 
         <div className={Styles.mobileArea}>
-          <div className={Styles.youtubeArea}>
-            <i className="fa-brands fa-youtube"></i>
-          </div>
+          <a
+            href="https://www.youtube.com/@mindburstTV"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <div className={Styles.youtubeArea}>
+              <i className="fa-brands fa-youtube"></i>
+            </div>
+          </a>
+
           <div className={Styles.mobileHarmburger} onClick={handleToggle}>
             <i className={`fa-solid ${menuOpen ? "fa-xmark" : "fa-bars"}`}></i>
           </div>
