@@ -143,6 +143,51 @@
   width: 100%;
 }
 
+/* Search Suggestion Dropdown */
+.suggestList {
+  position: absolute;
+  top: 100%;
+  left: 33%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 450px;
+  background-color: #1a1a1a;
+  color: #ddd;
+  border-radius: 6px;
+  margin-top: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+  z-index: 999;
+  list-style: none;
+  overflow: hidden;
+  padding: 0;
+}
+
+.suggestList li {
+  padding: 12px 18px;
+  border-bottom: 1px solid #2a2a2a;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-size: 14px;
+  text-align: left;
+}
+
+.suggestList li:hover {
+  background-color: #292929;
+}
+
+.suggestList li:last-child {
+  border-bottom: none;
+}
+
+/* Responsive Fix */
+@media (max-width: 600px) {
+  .suggestList {
+    max-width: 320px;
+    left: 8%;
+  }
+}
+
+
 /* Hide hamburger on desktop */
 @media (min-width: 768px) {
   .mobileHarmburger {

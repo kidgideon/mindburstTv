@@ -12,6 +12,7 @@ import SiteSettings from "../admin/adminSiteSettings";
 import ProtectedRoute from "../protectors/protector";
 import ManageJournals from "../admin/manageJournals";
 import FeedPage from "../pages/feedPage";
+import FeedCategory from "../pages/feedCategory";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/feed/:id" element={< FeedPage/>} />
+        <Route path="/feed/category/:category" element={< FeedCategory/>} />
         <Route path="/admin-home" element={<AdminHome />} />
         <Route path="/admin-login" element={<Login />} />
         <Route path="/admin-signup" element={<Signup />} />

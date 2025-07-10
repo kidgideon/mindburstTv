@@ -63,7 +63,6 @@ const Navbar = () => {
             <i className="fas fa-search"></i>
           </div>
 
-          <i className={`fas fa-bell ${styles.notificationIcon}`}></i>
           <i
             className={`fas fa-bars ${styles.hamburger}`}
             onClick={() => setIsMobileMenuOpen(true)}

@@ -12,7 +12,6 @@ import { db } from "../config/config";
 import styles from "../styles/feedPage.module.css";
 import UserNavbar from "../components/userNavbar";
 import Footer from "../components/footer";
-import { toast } from "sonner";
 
 const FeedPage = () => {
   const { id } = useParams();
@@ -23,8 +22,6 @@ const FeedPage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-     
-
       try {
         const docRef = doc(db, "articles", id);
         const docSnap = await getDoc(docRef);
@@ -32,14 +29,12 @@ const FeedPage = () => {
           const data = docSnap.data();
           setArticle(data);
 
-          // Fetch author info
           const userRef = doc(db, "users", data.createdBy);
           const userSnap = await getDoc(userRef);
           if (userSnap.exists()) {
             setAuthor(userSnap.data());
           }
 
-          // Fetch related articles
           const q = query(
             collection(db, "articles"),
             where("category", "==", data.category)
@@ -50,17 +45,45 @@ const FeedPage = () => {
             .map((doc) => ({ id: doc.id, ...doc.data() }));
           setRelated(filtered);
         }
-
-  
       } catch (err) {
-        
+        console.error(err);
       }
     };
 
     fetchData();
   }, [id]);
 
-  if (!article || !author) return null;
+  const pulse = {
+    animation: "pulse 1.5s infinite ease-in-out",
+    backgroundColor: "#2a2a2a",
+    borderRadius: "8px",
+  };
+
+  const keyframes = `
+    @keyframes pulse {
+      0% { opacity: 0.6; }
+      50% { opacity: 0.3; }
+      100% { opacity: 0.6; }
+    }
+  `;
+
+  if (!article || !author) {
+    return (
+      <div className="homeInterface">
+        <style>{keyframes}</style>
+        <UserNavbar />
+        <div style={{ padding: "30px 20px", maxWidth: 800, margin: "auto" }}>
+          <div style={{ ...pulse, height: 220, width: "100%", marginBottom: 20 }}></div>
+          <div style={{ ...pulse, height: 20, width: "60%", marginBottom: 10 }}></div>
+          <div style={{ ...pulse, height: 14, width: "30%", marginBottom: 20 }}></div>
+          <div style={{ ...pulse, height: 12, width: "100%", marginBottom: 12 }}></div>
+          <div style={{ ...pulse, height: 12, width: "95%", marginBottom: 12 }}></div>
+          <div style={{ ...pulse, height: 12, width: "80%", marginBottom: 12 }}></div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="homeInterface">
@@ -76,6 +99,38 @@ const FeedPage = () => {
           By {author.firstName} {author.lastName} •{" "}
           {new Date(article.createdAt).toLocaleDateString()}
         </p>
+        <div style={{ margin: "10px 0 20px" }}>
+  <button
+    onClick={() => {
+      const url = window.location.href;
+      const title = article.title;
+
+      if (navigator.share) {
+        navigator.share({
+          title: `MindBurst | ${title}`,
+          text: title,
+          url,
+        }).catch((err) => console.error("Share error:", err));
+      } else {
+        navigator.clipboard.writeText(url).then(() => {
+          alert("Link copied to clipboard!");
+        });
+      }
+    }}
+    style={{
+      backgroundColor: "#fcd600",
+      color: "#111",
+      padding: "10px 16px",
+      borderRadius: "6px",
+      border: "none",
+      cursor: "pointer",
+      fontWeight: "bold",
+    }}
+  >
+    Share this article
+  </button>
+</div>
+
 
         <div className={styles.sections}>
           {article.sections.map((sec, i) => {
