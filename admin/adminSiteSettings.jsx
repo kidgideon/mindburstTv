@@ -150,7 +150,6 @@ return (
         </button>
       </div>
     </div>
-    <Footer/>
   </div>
 </div>
 );

@@ -28,7 +28,7 @@ const ProtectedRoute = ({ children }) => {
 
   if (loading) return null; // Nothing renders while loading
 
-  return authenticated ? children : <Navigate to="/login" replace />;
+  return authenticated ? children : <Navigate to="/admin-login" replace />;
 };
 
 export default ProtectedRoute;

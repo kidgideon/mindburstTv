@@ -13,6 +13,7 @@
   right: 0px;
   top: 0;
   z-index: 1000;
+  height : 30px
 }
 
 .brand {
@@ -63,11 +64,11 @@
 /* Sidebar */
 .sidebar {
   position: fixed;
-  top: 3.2rem;
-  left: 0;
+  top: 49px;
+  bottom: 0px;
+  left: 0px;
   background: #000;
   width: 220px;
-  height: calc(100% - 3.2rem);
   padding-top: 1rem;
   display: flex;
   flex-direction: column;

@@ -25,7 +25,7 @@ const Feed = () => {
   return (
     <div className={style.feedInterface}>
       <div className={style.feedTop}>
-        <h1>Trending News</h1>
+        <h1>Top Stories</h1>
         <div className={style.topStories}>
           {articles.map((a) => (
             <div

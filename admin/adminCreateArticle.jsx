@@ -374,7 +374,7 @@ const CreateArticle = () => {
             </button>
           </div>
         </div>
-         <Footer/>
+      
       </div>
     </div>
   );

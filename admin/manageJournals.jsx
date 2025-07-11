@@ -90,8 +90,7 @@ const ManageUsers = () => {
               </div>
             </LazyLoad>
           ))}
-
-           <Footer/>
+         
         </div>
       </div>
 
