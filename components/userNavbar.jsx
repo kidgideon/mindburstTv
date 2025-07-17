@@ -101,15 +101,71 @@ const UserNavbar = () => {
         </div>
 
         <div className={Styles.mobileArea}>
-          <a
-            href="https://www.youtube.com/@mindburstTV"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <div className={Styles.youtubeArea}>
-              <i className="fa-brands fa-youtube"></i>
-            </div>
-          </a>
+        <div className={Styles.youtubeArea}>
+  <a
+    href="https://www.youtube.com/@mindburstTV"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <i
+      className="fa-brands fa-youtube"
+      style={{ color: "#FF0000", marginRight: "15px", fontSize: "1.5rem" }}
+    ></i>
+  </a>
+
+  <a
+    href="https://www.facebook.com/share/16q4iz5KBG/"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <i
+      className="fa-brands fa-facebook"
+      style={{ color: "#1877F2", marginRight: "15px", fontSize: "1.5rem" }}
+    ></i>
+  </a>
+
+  <a
+    href="https://www.instagram.com/mindbursttv?igsh=NHI5cGdtdmFtMnpl"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <i
+      className="fa-brands fa-instagram"
+      style={{
+        background:
+          "radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%)",
+        WebkitBackgroundClip: "text",
+        WebkitTextFillColor: "transparent",
+        fontSize: "1.5rem",
+        marginRight: "15px",
+      }}
+    ></i>
+  </a>
+
+  <a
+    href="https://x.com/mindburstTV?t=mTMpLb9W-s2QpjmpQl1qCg&s=09"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <i
+      className="fa-brands fa-x-twitter"
+      style={{ color: "#5c5c5cff", marginRight: "15px", fontSize: "1.5rem" }}
+    ></i>
+  </a>
+
+  <a
+    href="https://www.tiktok.com/@mind.bursttv?_t=ZM-8y66wNDc3Rm&_r=1"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <i
+      className="fa-brands fa-tiktok"
+      style={{ color: "#919191ff", fontSize: "1.5rem" }}
+    ></i>
+  </a>
+</div>
+
+
 
           <div className={Styles.mobileHarmburger} onClick={handleToggle}>
             <i className={`fa-solid ${menuOpen ? "fa-xmark" : "fa-bars"}`}></i>
@@ -120,13 +176,12 @@ const UserNavbar = () => {
       {/* Search with dropdown */}
       <div className={Styles.searchArea} ref={inputRef}>
         <i className="fa-solid fa-magnifying-glass"></i>
-        <input
-          type="text"
+        <input type="text"
           placeholder="find a story"
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          onFocus={() => setSearchTerm((prev) => prev)}
+          onChange={(e) => setSearchTerm(e.target.value)} onFocus={() => setSearchTerm((prev) => prev)}
         />
+
         <AnimatePresence>
           {suggestions.length > 0 && (
             <motion.ul
