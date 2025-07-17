@@ -51,10 +51,61 @@
     cursor: pointer;
 }
 
-.youtubeArea i {
-    color: red;
-    margin-right: 10px;
+.youtubeArea {
+  display: flex;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  margin: 20px 0px;
+  gap: 15px;
+  flex-direction: row;
+  color: white;
+  z-index: 1000px;
 }
+
+.youtube,
+.facebook,
+.instagram,
+.twitter,
+.tiktok {
+  font-size: 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+/* Specific platform colors */
+.youtube {
+  color: #ff0000;
+}
+
+.facebook {
+  color: #1877f2;
+}
+
+.instagram {
+  background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285aeb 90%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.twitter {
+  color: #5c5c5cff;
+}
+
+.tiktok {
+  color: #919191ff;
+}
+
+/* Optional hover effect */
+.youtube:hover,
+.facebook:hover,
+.instagram:hover,
+.twitter:hover,
+.tiktok:hover {
+  transform: scale(1.2);
+}
+
+
 
 .mobileHarmburger {
     color: #fcd600;
@@ -219,9 +270,6 @@
         margin-top: 12px;
     }
 
-    .youtubeArea i {
-        margin-right: 5px;
-    }
 
     .searchArea i {
         left: 12%;
@@ -243,4 +291,15 @@
     .imageArea img {
         margin-left: 5px;
     }
+
+    
+.youtube,
+.facebook,
+.instagram,
+.twitter,
+.tiktok {
+  font-size: 1.40rem;
+  transition: transform 0.3s ease;
+  margin: 20px 0px;
+}
 }
