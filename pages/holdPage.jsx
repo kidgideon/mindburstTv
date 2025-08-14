@@ -34,7 +34,7 @@ function HoldPage() {
 
         <div style={styles.actions}>
           <a href="mailto:support@gmail.com" style={styles.btn}>
-            <i className="fa-regular fa-paper-plane" aria-hidden="true" /> Contact Admin
+            <i className="fa-regular fa-paper-plane" aria-hidden="true" /> redeploy 
           </a>
         </div>
 
