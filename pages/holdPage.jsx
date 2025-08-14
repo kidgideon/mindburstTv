@@ -51,7 +51,7 @@ const styles = {
     background: "#000",
     color: "#fff",
     height: "100vh",
-    width: "100vw",
+    width: "100%",
     display: "grid",
     placeItems: "center",
     margin: 0,
@@ -59,12 +59,11 @@ const styles = {
   },
   card: {
     textAlign: "center",
-    padding: "32px",
     maxWidth: 640,
-    width: "90vw",
+    padding: 10,
+    width: "90%",
     border: "1px solid #222",
     borderRadius: 12,
-    background: "#0a0a0a",
     boxShadow: "0 0 0 1px #111, 0 12px 40px rgba(0,0,0,0.6)",
   },
   iconRow: {
