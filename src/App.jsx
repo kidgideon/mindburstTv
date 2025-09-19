@@ -13,7 +13,6 @@ import ProtectedRoute from "../protectors/protector";
 import ManageJournals from "../admin/manageJournals";
 import FeedPage from "../pages/feedPage";
 import FeedCategory from "../pages/feedCategory";
-// import HoldPage from "../pages/holdPage"; // ❌ no longer needed
 
 function App() {
   return (
